@@ -6,4 +6,3 @@ sudo apt-get install apache2 mysql-server php5 php5-curl php5-gd php5-mysql php5
 sudo a2enmod rewrite 
 
 sudo apt-get install git -y
-	

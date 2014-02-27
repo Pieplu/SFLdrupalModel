@@ -26,13 +26,13 @@ Vagrant.configure("2") do |config|
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
-  #config.vm.network "private_network", ip:"33.33.33.10", virtualbox__intnet: "drupal.vbox.local"
+  config.vm.network "private_network", ip:"33.33.33.10", virtualbox__intnet: "drupal.vbox.local"
 
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  config.vm.synced_folder "public/", "/vagrant/", owner: "www-data", group: "www-data"
+  config.vm.synced_folder "public/", "/vagrant/public", owner: "www-data", group: "www-data"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -49,7 +49,7 @@ Vagrant.configure("2") do |config|
   # View the documentation for the provider you're using for more
   # information on available options.
 
-  config.vm.provision :shell, :path => "bootstrap.sh"
+ # config.vm.provision :shell, :path => "bootstrap.sh"
 
 
   # Enable provisioning with Puppet stand alone.  Puppet manifests
@@ -79,9 +79,21 @@ Vagrant.configure("2") do |config|
   # path, and data_bags path (all relative to this Vagrantfile), and adding
   # some recipes and/or roles.
   #
-  # config.vm.provision :chef_solo do |chef|
-  #   chef.cookbooks_path = "../my-recipes/cookbooks"
-  #   chef.roles_path = "../my-recipes/roles"
+  config.vm.provision :chef_solo do |chef|
+      chef.cookbooks_path = ["cookbooks/site-cookbooks", "cookbooks/drupal-cookbooks"]
+      chef.roles_path = "roles"
+      chef.add_role("drupal_lamp_varnish_dev")
+
+      chef.json.merge!({
+        :www_root => '/vagrant/public',
+        :mysql => {
+          :server_root_password => "root" # TODO Hardcoded MySQL root password.
+        },
+        :hosts => {
+          :localhost_aliases => ["drupal.vbox.local", "dev-site.vbox.local"]
+        }
+      })
+  end
   #   chef.data_bags_path = "../my-recipes/data_bags"
   #   chef.add_recipe "mysql"
   #   chef.add_role "web"
@@ -89,6 +101,8 @@ Vagrant.configure("2") do |config|
   #   # You may also specify custom JSON attributes:
   #   chef.json = { :mysql_password => "foo" }
   # end
+
+
 
   # Enable provisioning with chef server, specifying the chef server URL,
   # and the path to the validation key (relative to this Vagrantfile).
