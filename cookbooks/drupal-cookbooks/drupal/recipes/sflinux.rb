@@ -22,11 +22,4 @@ execute "add-drupal-db" do
   ignore_failure true
 end
 
-# Create folders for virtual host
-bash "install-default-drupal-makefile" do
-  code <<-EOH
-(mkdir -p /vagrant/public/drupal.vbox.local/www)
-  EOH
-end
-
 
