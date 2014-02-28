@@ -17,24 +17,14 @@
 
 case node[:platform]
 when "debian", "ubuntu"
-  git "/usr/share/drush" do
-    repository "git://git.drupal.org/project/drush.git"
-    reference "8.x-6.x"
-    action :sync
-  end
-  
-  bash "make-drush-symlink" do
+  bash "install-drush" do
     code <<-EOH
-    (ln -s /usr/share/drush/drush /usr/bin/drush)
+(cd /tmp; wget http://ftp.drupal.org/files/projects/drush-7.x-4.5.tar.gz)
+(cd /tmp; tar zxvf drush-7.x-4.5.tar.gz)
+(cd /tmp; mv drush /usr/share/)
+(ln -s /usr/share/drush/drush /usr/bin/drush)
+(pear install Console_Table)
     EOH
-    not_if { File.exists?("/usr/bin/drush") }
-    only_if { File.exists?("/usr/share/drush/drush") }
-  end
-
-  bash "install-console-table" do
-    code <<-EOH
-    (pear install Console_Table)
-    EOH
-    not_if "pear list| grep Console_Table"
+    not_if { File.exists?("/usr/share/drush/drush") }
   end
 end
