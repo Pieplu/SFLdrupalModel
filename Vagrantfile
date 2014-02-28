@@ -84,7 +84,7 @@ Vagrant.configure("2") do |config|
       chef.roles_path = "roles"
       chef.add_role("drupal_lamp_varnish_dev")
 
-      #chef.add_recipe('drupal::example')
+      chef.add_recipe('drupal::sflinux')
 
       chef.json.merge!({
         :www_root => '/vagrant/public',
