@@ -83,8 +83,7 @@ Vagrant.configure("2") do |config|
       chef.cookbooks_path = ["cookbooks/site-cookbooks", "cookbooks/drupal-cookbooks"]
       chef.roles_path = "roles"
       chef.add_role("drupal_lamp_varnish_dev")
-	
-	#simple creation du dossier de hosts
+
       chef.add_recipe('drupal::sflinux')
 
       chef.json.merge!({
