@@ -93,8 +93,9 @@ Vagrant.configure("2") do |config|
           :server_root_password => "root" # TODO Hardcoded MySQL root password.
         },
         :hosts => {
-          :localhost_aliases => ["drupal.vbox.local", "dev-site.vbox.local"]
-        }
+          :localhost_aliases => ["drupal.vbox.local", "dev-site.vbox.local", "projet-ecole-emile-sarr.local"]
+        },
+        :dbProjets => ["drupal", "devsite", "emilesarr"] 
       })
   end
   #   chef.data_bags_path = "../my-recipes/data_bags"

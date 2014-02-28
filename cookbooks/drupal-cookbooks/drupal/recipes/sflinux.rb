@@ -14,12 +14,12 @@ execute "add-admin-user" do
 end
 
 # TODO: Break this out into a vagrant only cookbook? (name: "drupal-vagrant")
-# create a drupal db
-execute "add-drupal-db" do
-  command "/usr/bin/mysql -u root -p#{node[:mysql][:server_root_password]} -e \"" +
-      "CREATE DATABASE IF NOT EXISTS drupal;\""
-  action :run
-  ignore_failure true
+# create all db on the Vagrantfile
+node[:dbProjets].each do |database|
+	execute "add-databases" do
+	  command "/usr/bin/mysql -u root -p#{node[:mysql][:server_root_password]} -e \"" +
+	      "CREATE DATABASE IF NOT EXISTS #{database};\""
+	  action :run
+	  ignore_failure true
+	end
 end
-
-
