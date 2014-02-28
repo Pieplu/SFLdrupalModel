@@ -17,7 +17,7 @@ end
 # create a drupal db
 execute "add-drupal-db" do
   command "/usr/bin/mysql -u root -p#{node[:mysql][:server_root_password]} -e \"" +
-      "CREATE DATABASE drupal;\""
+      "CREATE DATABASE IF NOT EXISTS drupal;\""
   action :run
   ignore_failure true
 end
@@ -33,20 +33,20 @@ end
 # Copy make file to site.
 # TODO Fetch this file online?
 # TODO Does this overwrite?
-cookbook_file "/vagrant/public/drupal.vbox.local/sflinux.make" do
-  source "sflinux.make"
-  notifies :restart, resources("service[apache2]"), :delayed
-end
+#cookbook_file "/vagrant/public/drupal.vbox.local/sflinux.make" do
+# source "sflinux.make"
+# notifies :restart, resources("service[apache2]"), :delayed
+#end
 
 # drush make a default drupal site sflinux
-bash "install-default-drupal-site" do
-  code <<-EOH
-(cd /vagrant/public/drupal.vbox.local; drush make sflinux.make www)
-  EOH
-  not_if { File.exists?("/vagrant/public/drupal.vbox.local/www/index.php") }
-end
+#bash "install-default-drupal-site" do
+#  code <<-EOH
+#(cd /vagrant/public/drupal.vbox.local; drush make sflinux.make www)
+#  EOH
+#  not_if { File.exists?("/vagrant/public/drupal.vbox.local/www/index.php") }
+#end
 
-cookbook_file "/vagrant/public/drupal.vbox.local/www/sites/default/settings.php" do
-  source "settings.php"
-  notifies :restart, resources("service[varnish]"), :delayed
-end
+#cookbook_file "/vagrant/public/drupal.vbox.local/www/sites/default/settings.php" do
+#  source "settings.php"
+#  notifies :restart, resources("service[varnish]"), :delayed
+#end
