@@ -22,10 +22,6 @@ Vagrant.configure("2") do |config|
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   # config.vm.network :private_network, ip: "192.168.33.10"
-
-  # Create a public network, which generally matched to bridged network.
-  # Bridged networks make the machine appear as another physical device on
-  # your network.
   config.vm.network "private_network", ip:"33.33.33.10", virtualbox__intnet: "drupal.vbox.local"
 
   # Share an additional folder to the guest VM. The first argument is
@@ -38,13 +34,13 @@ Vagrant.configure("2") do |config|
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
-  # config.vm.provider :virtualbox do |vb|
+   config.vm.provider :virtualbox do |vb|
   #   # Don't boot with headless mode
   #   vb.gui = true
   #
   #   # Use VBoxManage to customize the VM. For example to change memory:
-  #   vb.customize ["modifyvm", :id, "--memory", "1024"]
-  # end
+     vb.customize ["modifyvm", :id, "--memory", "1024"]
+   end
   #
   # View the documentation for the provider you're using for more
   # information on available options.
@@ -84,7 +80,7 @@ Vagrant.configure("2") do |config|
       chef.roles_path = "roles"
       chef.add_role("drupal_lamp_varnish_dev")
 	
-	#simple creation du dossier de hosts
+	    #set des bases de données
       chef.add_recipe('drupal::sflinux')
 
       chef.json.merge!({
@@ -93,9 +89,9 @@ Vagrant.configure("2") do |config|
           :server_root_password => "root" # TODO Hardcoded MySQL root password.
         },
         :hosts => {
-          :localhost_aliases => ["drupal.vbox.local", "dev-site.vbox.local", "projet-ecole-emile-sarr.local"]
+          :localhost_aliases => ["drupal.vbox.local", "dev-site.vbox.local", "projet-ecole-emile-sarr"]
         },
-        :dbProjets => ["drupal", "devsite", "emilesarr"] 
+        :dbProjets => ["drupal", "devsite", "ecole_emile_sarr"] 
       })
   end
   #   chef.data_bags_path = "../my-recipes/data_bags"
